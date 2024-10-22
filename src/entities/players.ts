@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { Piece } from './piece';
+import { Piece } from './pieces';
 
 @Entity('players')
 export class Player {
@@ -16,5 +16,5 @@ export class Player {
   username: string;
 
   @OneToMany(() => Piece, piece => piece.player)
-  pieces: Piece[];
+  pieces: Piece[]; 
 }

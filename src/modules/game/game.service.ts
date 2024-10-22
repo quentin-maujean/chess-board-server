@@ -1,10 +1,10 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Game } from 'src/entities/game';
+import { Game } from '../../entities/game.entity';
 import { Piece } from 'src/entities/pieces';
 import { Move } from 'src/entities/moves';
-import { Player } from 'src/entities/player'; // Assuming Player entity is in the same directory
+import { Player } from '../../entities/player.entity'; // Assuming Player entity is in the same directory
 
 @Injectable()
 export class GameService {

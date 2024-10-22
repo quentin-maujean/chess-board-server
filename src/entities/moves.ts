@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { Piece } from './piece.entity';
+import { Piece } from './pieces';
 
 @Entity()
 export class Move {

@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
-import { Player } from './player';
+import { Player } from './players';
 
 @Entity()
 export class Piece {
