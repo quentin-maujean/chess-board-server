@@ -21,7 +21,7 @@ export class GameService {
   async updateGameState(gameId: number, pieceId: number, fromPosition: string, toPosition: string): Promise<{ message: string; newBoardState: Record<number, string> }> {
     try {
       const currentUser = // Assume we have a way to get the current user's ID
-      const game = await this.gameRepository.findOne({ where: { id: gameId } });
+      const game = await this.gameRepository.findOne(gameId);
       if (!game || !game.isActive) {
         throw new BadRequestException('Game not found or is not active.');
       }
