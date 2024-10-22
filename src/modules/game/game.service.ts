@@ -1,61 +1,61 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Game } from 'src/entities/game';
 import { Piece } from 'src/entities/pieces';
 import { Move } from 'src/entities/moves';
-import { Player } from 'src/entities/players';
 
 @Injectable()
 export class GameService {
   constructor(
+    @InjectRepository(Game)
+    private readonly gameRepository: Repository<Game>,
     @InjectRepository(Piece)
-    private pieceRepository: Repository<Piece>,
+    private readonly pieceRepository: Repository<Piece>,
     @InjectRepository(Move)
-    private moveRepository: Repository<Move>,
-    @InjectRepository(Player)
-    private playerRepository: Repository<Player>,
+    private readonly moveRepository: Repository<Move>,
   ) {}
 
-  async validateMove(
-    gameId: number,
-    pieceId: number,
-    newPosition: string,
-  ): Promise<{ message: string; newBoardState: { [key: number]: string } | {} }> {
+  async updateGameState(gameId: number, pieceId: number, fromPosition: string, toPosition: string): Promise<{ message: string; newBoardState: Record<number, string> }> {
     try {
-      const piece = await this.pieceRepository.findOneBy({ id: pieceId });
-      if (!piece) {
-        return { message: 'Invalid pieceId: Piece does not exist', newBoardState: {} };
+      // Retrieve the current game state using "gameId"
+      const game = await this.gameRepository.findOneBy({ id: gameId });
+      if (!game) {
+        throw new Error('Game not found');
       }
 
-      // Retrieve the game state using "gameId" to ensure the game exists and is currently active.
-      // This is a placeholder for the actual game state retrieval logic.
-      const gameIsActive = true; // Replace with actual game state check
-      if (!gameIsActive) {
-        return { message: 'Invalid gameId: Game is not active', newBoardState: {} };
-      }
+      // Update the position of the piece identified by "pieceId" in the "pieces" table to "toPosition"
+      await this.pieceRepository.update(pieceId, { position: toPosition });
 
-      // Validate the "newPosition" based on the piece's type and the rules of the game.
-      // This is a placeholder for the actual move validation logic.
-      const isValidMove = true; // Replace with actual move validation logic
-      if (!isValidMove) {
-        return { message: 'Invalid move: Move does not comply with game rules', newBoardState: {} };
-      }
+      // Insert a new record into the "moves" table
+      const move = this.moveRepository.create({
+        piece_id: pieceId,
+        from_position: fromPosition,
+        to_position: toPosition,
+        is_valid: true,
+        move_time: new Date(),
+      });
+      await this.moveRepository.save(move);
 
-      // Check if the path to the "newPosition" is clear and if the move does not put the player's own king in check.
-      // This is a placeholder for the actual path and check validation logic.
-      const isPathClearAndNotInCheck = true; // Replace with actual path and check validation logic
-      if (!isPathClearAndNotInCheck) {
-        return { message: 'Invalid move: Path is not clear or move puts king in check', newBoardState: {} };
-      }
+      // Check for any special conditions such as check, checkmate, or stalemate and update the game state accordingly
+      // This is a placeholder for additional game logic
+      // ...
 
-      // Update the game state with the valid move.
-      // This is a placeholder for the actual game state update logic.
-      const newBoardState = { [pieceId]: newPosition }; // Replace with actual game state update logic
+      // Save the updated game state
+      // This is a placeholder for saving the game state
+      // ...
 
-      return { message: 'Move executed successfully', newBoardState };
+      // If the move concludes the game, update the game status
+      // This is a placeholder for concluding the game
+      // ...
+
+      // Return a response object
+      return {
+        message: 'Move executed successfully',
+        newBoardState: { [pieceId]: toPosition },
+      };
     } catch (error) {
-      // Handle exceptions appropriately
-      return { message: `Error validating move: ${error.message}`, newBoardState: {} };
+      throw new Error(`Failed to update game state: ${error.message}`);
     }
   }
 }
