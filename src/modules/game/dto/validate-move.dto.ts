@@ -8,6 +8,6 @@ export class ValidateMoveDto {
   pieceId: number;
 
   @IsString()
-  @Matches(/^[A-H][1-8]$/, { message: 'newPosition must be a valid chess position (e.g., "E2", "A4")' })
+  @Matches(/^[A-H][1-8]$/, { message: 'Invalid board position.' })
   newPosition: string;
 }

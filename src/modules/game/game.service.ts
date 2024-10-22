@@ -1,15 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Game } from 'src/entities/game';
 import { Piece } from 'src/entities/pieces';
 import { Move } from 'src/entities/moves';
+import { Player } from 'src/entities/player'; // Assuming Player entity is in the same directory
 
 @Injectable()
 export class GameService {
   constructor(
     @InjectRepository(Game)
     private readonly gameRepository: Repository<Game>,
+    @InjectRepository(Player) private readonly playerRepository: Repository<Player>,
     @InjectRepository(Piece)
     private readonly pieceRepository: Repository<Piece>,
     @InjectRepository(Move)
@@ -18,11 +20,26 @@ export class GameService {
 
   async updateGameState(gameId: number, pieceId: number, fromPosition: string, toPosition: string): Promise<{ message: string; newBoardState: Record<number, string> }> {
     try {
+      const currentUser = // Assume we have a way to get the current user's ID
       // Retrieve the current game state using "gameId"
       const game = await this.gameRepository.findOneBy({ id: gameId });
-      if (!game) {
-        throw new Error('Game not found');
+      if (!game || !game.isActive) {
+        throw new BadRequestException('Game not found or is not active.');
       }
+
+      // Verify that the "pieceId" exists and belongs to the current player
+      const piece = await this.pieceRepository.findOne({
+        where: { id: pieceId, player: currentUser },
+        relations: ['player'],
+      });
+      if (!piece) {
+        throw new BadRequestException('Piece not found or does not belong to the current player.');
+      }
+
+      // Validate that the "newPosition" is a valid board position according to the game rules
+      // Placeholder for actual game rules validation
+      // Ensure that the move does not result in the player's own king being in check
+      // Placeholder for check validation
 
       // Update the position of the piece identified by "pieceId" in the "pieces" table to "toPosition"
       await this.pieceRepository.update(pieceId, { position: toPosition });
@@ -32,7 +49,7 @@ export class GameService {
         piece_id: pieceId,
         from_position: fromPosition,
         to_position: toPosition,
-        is_valid: true,
+        is_valid: true, // This should be set based on actual game rules validation
         move_time: new Date(),
       });
       await this.moveRepository.save(move);
