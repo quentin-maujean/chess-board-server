@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
 import { Player } from './players';
+import { Move } from './moves';
 
 @Entity()
 export class Piece {
@@ -20,4 +21,7 @@ export class Piece {
 
   @ManyToOne(() => Player, player => player.pieces)
   player: Player;
+
+  @OneToMany(() => Move, (move) => move.piece)
+  moves: Move[];
 }
