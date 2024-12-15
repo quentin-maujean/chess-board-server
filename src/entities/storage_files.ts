@@ -37,4 +37,7 @@ export class StorageFile {
   @Column({ nullable: true, type: 'timestamp' })
   @CreateDateColumn()
   updated_at: Date
+
+  @Column({ nullable: true })
+  version: string
 }
