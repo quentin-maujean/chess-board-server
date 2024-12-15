@@ -30,9 +30,6 @@ export class StorageFile {
   // Virtual column
   url: string
 
-  // Virtual column
-  url2: string
-
   @Column({ nullable: true, type: 'timestamp' })
   @CreateDateColumn()
   created_at: Date
