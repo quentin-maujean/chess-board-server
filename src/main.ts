@@ -28,6 +28,6 @@ async function bootstrap() {
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true })
   await setupSwagger(app)
-  await app.listen(configService.get('app.port', 3000))
+  await app.listen(configService.get('app.port', 4000))
 }
 bootstrap()
