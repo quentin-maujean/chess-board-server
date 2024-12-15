@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { Piece } from './piece.entity';
+import { Piece } from './pieces';
 
 @Entity()
 export class Move {
@@ -12,6 +12,9 @@ export class Move {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updated_at: Date;
 
+  @ManyToOne(() => Piece, (piece) => piece.moves)
+  piece: Piece;
+
   @Column({ type: 'varchar' })
   from_position: string;
 
@@ -23,8 +26,4 @@ export class Move {
 
   @Column({ type: 'timestamp' })
   move_time: Date;
-
-  @ManyToOne(() => Piece, (piece) => piece.moves)
-  @Column()
-  piece_id: number;
 }
