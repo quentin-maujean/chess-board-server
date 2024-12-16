@@ -21,9 +21,6 @@ export class Move {
   @Column({ type: 'varchar' })
   to_position: string;
 
-  @Column({ type: 'boolean' })
-  is_valid: boolean;
-
   @Column({ type: 'timestamp' })
   move_time: Date;
 }
