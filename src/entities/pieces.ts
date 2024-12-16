@@ -21,7 +21,4 @@ export class Piece {
 
   @ManyToOne(() => Player, player => player.pieces)
   player: Player;
-
-  @OneToMany(() => Move, (move) => move.piece)
-  moves: Move[];
 }
