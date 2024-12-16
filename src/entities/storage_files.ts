@@ -40,4 +40,7 @@ export class StorageFile {
 
   @Column({ nullable: true })
   version: string
+
+  @Column({ nullable: true })
+  version2: string
 }
