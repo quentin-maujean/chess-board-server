@@ -18,6 +18,27 @@ export class GameService {
     private readonly moveRepository: Repository<Move>,
   ) {}
 
+  async createGameState(playerId: string): Promise<{ message: string; newGame: Game }> {
+    try {
+      const currentUser = { playerId }
+      const game = await this.gameRepository.create();
+      if (!game) {
+        throw new BadRequestException('Game not found or is not active.');
+      }
+
+      game.isActive = true;
+
+      // Verify that the "pieceId" exists and belongs to the current player
+      
+      return {
+        message: 'Move executed successfully',
+        newGame: game
+      };
+    } catch (error) {
+      throw new Error(`Failed to update game state: ${error.message}`);
+    }
+  }
+
   async updateGameState(gameId: number, pieceId: number, fromPosition: string, toPosition: string, playerId: string): Promise<{ message: string; newBoardState: Record<number, string> }> {
     try {
       const currentUser = { playerId }
