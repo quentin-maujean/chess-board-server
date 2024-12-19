@@ -42,7 +42,7 @@ export class GameService {
   async updateGameState(gameId: number, pieceId: number, fromPosition: string, toPosition: string, playerId: string): Promise<{ message: string; newBoardState: Record<number, string> }> {
     try {
       const currentUser = { playerId }
-      //
+      // Comment
       const game = await this.gameRepository.findOne(gameId);
       if (!game || !game.isActive) {
         throw new BadRequestException('Game not found or is not active.');
